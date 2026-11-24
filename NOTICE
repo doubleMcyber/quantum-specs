@@ -1,0 +1,76 @@
+Quantum primitive specifications for formal-quantum-computation
+Copyright 2026 Marlon Moenius
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product is built on, and includes material derived from, formal-quantum-computation
+by Google DeepMind (https://github.com/google-deepmind/formal-quantum-computation),
+Copyright 2026 Google LLC, licensed under the Apache License, Version 2.0.
+
+Derived structure
+-----------------
+The specification format (holes filled by a solver, frozen correctness and cost theorems,
+ChallengeJson files), the module layout and the imports of every file in QuantumSpecs/ and
+QuantumSolutions/ follow formal-quantum-computation. The specifications and solutions use its
+QuantumComputation library and, where noted below, its QuantumComputationSpecs and
+QuantumComputationDiscoveries libraries. Those libraries are not copied here; Lake fetches
+them from the repository above at the commit pinned in lakefile.toml and lake-manifest.json.
+
+Every specification and most solutions contain the documentation sentence "By default we allow
+only a single variable.", taken from QuantumComputationSpecs/Primitives/Arcsin.lean.
+
+Files that copy Google's source text
+------------------------------------
+The following files contain sections copied from the `discoveries` branch of
+formal-quantum-computation, commit a88de8ff65d78af564b2373088ca369dc95f6547, from the files
+
+  QuantumComputationDiscoveries/Primitives/Arcsin/Solution/LowerKraus.lean
+  QuantumComputationDiscoveries/Primitives/Arcsin/Solution/StepSemantics.lean
+  QuantumComputationDiscoveries/Primitives/Arcsin/Solution/EqualTableAdd.lean
+
+each of which carries the line "Copyright 2026 Google LLC". Each file below has the line
+"Portions Copyright 2026 Google LLC (marked GOOGLE-DERIVED below)" in its header. The copied sections are
+enclosed by the markers BEGIN GOOGLE-DERIVED and END GOOGLE-DERIVED, and the file states the
+modifications made (removed file headers and imports, a renamed namespace, or a subset of
+declarations kept).
+
+  QuantumSolutions/Lookup/TableLookup.lean
+      LowerKraus, StepSemantics and EqualTableAdd; namespace ArcsinImpl renamed to
+      TableLookupSteps.
+  QuantumSolutions/BlockEncoding/SelectPauli.lean
+      LowerKraus and StepSemantics, through TableLookup.lean; namespace renamed to
+      SelectPauliSteps; only the declarations needed are kept.
+  QuantumSolutions/BlockEncoding/PreparePauliLCU.lean
+      The same section as SelectPauli.lean, copied with it.
+  QuantumSolutions/BlockEncoding/PreparePauliLCUAlias.lean
+      LowerKraus, StepSemantics and EqualTableAdd, through TableLookup.lean; namespace
+      renamed to TableLookupSteps.
+  QuantumSolutions/PrimeField/FieldMul.lean
+      LowerKraus, StepSemantics and EqualTableAdd, unchanged apart from removed headers and
+      imports.
+  QuantumSolutions/EllipticCurve/ECPointAdd.lean
+  QuantumSolutions/EllipticCurve/ECPointAddPoly.lean
+  QuantumSolutions/EllipticCurve/ECPointAddProj.lean
+  QuantumSolutions/EllipticCurve/ECPointAddProjPoly.lean
+      LowerKraus, StepSemantics and EqualTableAdd, unchanged apart from removed headers and
+      imports.
+
+Files that import Google's discoveries library
+-----------------------------------------------
+These solutions do not copy Google's text but import
+QuantumComputationDiscoveries.Primitives.Arcsin.Solution.EqualTableAdd (Copyright 2026 Google
+LLC) and use its step-list semantics and ripple-carry adder:
+
+  QuantumSolutions/Arithmetic/Adder.lean
+  QuantumSolutions/Arithmetic/AddConstant.lean
+  QuantumSolutions/Arithmetic/ControlledAdder.lean
+  QuantumSolutions/Arithmetic/ControlledAddConstant.lean
+  QuantumSolutions/Arithmetic/Comparator.lean
+  QuantumSolutions/Arithmetic/CompareConstant.lean
+  QuantumSolutions/ModularArithmetic/ModAdd.lean
+  QuantumSolutions/ModularArithmetic/ModMulConst.lean
+  QuantumSolutions/ModularArithmetic/ModExp.lean
+
+The specifications QuantumSpecs/BlockEncoding/QubitizedWalk.lean and
+QuantumSpecs/BlockEncoding/ControlledQubitizedWalk.lean import
+QuantumComputationSpecs.Primitives.THCFactorization and reuse its definitions.

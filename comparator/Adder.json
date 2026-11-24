@@ -1,0 +1,29 @@
+{
+  "challenge_module": "QuantumSpecs.Arithmetic.Adder",
+  "solution_module": "QuantumSolutions.Arithmetic.Adder",
+  "theorem_names": [
+    "QuantumComputation.Specs.adder_correctness",
+    "QuantumComputation.Specs.adder_k2048_spacetime_cost",
+    "QuantumComputation.Specs.adder_k2048_t_cost",
+    "QuantumComputation.Specs.adder_k64_spacetime_cost",
+    "QuantumComputation.Specs.adder_k64_t_cost",
+    "QuantumComputation.Specs.adder_spacetime_cost",
+    "QuantumComputation.Specs.adder_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.adderAncillas",
+    "QuantumComputation.Specs.adderProgram",
+    "QuantumComputation.Specs.adderK2048SpacetimeCost",
+    "QuantumComputation.Specs.adderK2048TCost",
+    "QuantumComputation.Specs.adderK64SpacetimeCost",
+    "QuantumComputation.Specs.adderK64TCost",
+    "QuantumComputation.Specs.adderSpacetimeCost",
+    "QuantumComputation.Specs.adderTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

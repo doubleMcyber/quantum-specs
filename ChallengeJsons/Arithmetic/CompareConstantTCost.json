@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Arithmetic.CompareConstant",
+  "solution_module": "QuantumSolutions.Arithmetic.CompareConstant",
+  "theorem_names": [
+    "QuantumComputation.Specs.compare_constant_correctness",
+    "QuantumComputation.Specs.compare_constant_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.compareConstantAncillas",
+    "QuantumComputation.Specs.compareConstantProgram",
+    "QuantumComputation.Specs.compareConstantTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

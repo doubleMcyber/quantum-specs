@@ -1,0 +1,46 @@
+{
+  "challenge_module": "QuantumSpecs.Lookup.TableLookup",
+  "solution_module": "QuantumSolutions.Lookup.TableLookup",
+  "theorem_names": [
+    "QuantumComputation.Specs.qromBudgetLookup_correctness",
+    "QuantumComputation.Specs.qromBudgetLookup_l1024w32a256_const_cost",
+    "QuantumComputation.Specs.qromBudgetLookup_t_cost",
+    "QuantumComputation.Specs.qromBudgetUnlookup_correctness",
+    "QuantumComputation.Specs.qromBudgetUnlookup_l1024w32a256_const_cost",
+    "QuantumComputation.Specs.qromBudgetUnlookup_t_cost",
+    "QuantumComputation.Specs.qromLookup_correctness",
+    "QuantumComputation.Specs.qromLookup_l1024w32_const_cost",
+    "QuantumComputation.Specs.qromLookup_spacetime_cost",
+    "QuantumComputation.Specs.qromLookup_t_cost",
+    "QuantumComputation.Specs.qromUnlookup_correctness",
+    "QuantumComputation.Specs.qromUnlookup_l1024w32_const_cost",
+    "QuantumComputation.Specs.qromUnlookup_spacetime_cost",
+    "QuantumComputation.Specs.qromUnlookup_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.qromBudgetLookupAncillas",
+    "QuantumComputation.Specs.qromBudgetLookupProgram",
+    "QuantumComputation.Specs.qromBudgetLookupL1024W32A256ConstCost",
+    "QuantumComputation.Specs.qromBudgetLookupTCost",
+    "QuantumComputation.Specs.qromBudgetUnlookupAncillas",
+    "QuantumComputation.Specs.qromBudgetUnlookupProgram",
+    "QuantumComputation.Specs.qromBudgetUnlookupL1024W32A256ConstCost",
+    "QuantumComputation.Specs.qromBudgetUnlookupTCost",
+    "QuantumComputation.Specs.qromLookupAncillas",
+    "QuantumComputation.Specs.qromLookupProgram",
+    "QuantumComputation.Specs.qromLookupL1024W32ConstCost",
+    "QuantumComputation.Specs.qromLookupSpacetimeCost",
+    "QuantumComputation.Specs.qromLookupTCost",
+    "QuantumComputation.Specs.qromUnlookupAncillas",
+    "QuantumComputation.Specs.qromUnlookupProgram",
+    "QuantumComputation.Specs.qromUnlookupL1024W32ConstCost",
+    "QuantumComputation.Specs.qromUnlookupSpacetimeCost",
+    "QuantumComputation.Specs.qromUnlookupTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

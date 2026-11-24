@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.EllipticCurve.ECPointAddProj",
+  "solution_module": "QuantumSolutions.EllipticCurve.ECPointAddProj",
+  "theorem_names": [
+    "QuantumComputation.Specs.ecAddProj_correctness",
+    "QuantumComputation.Specs.ecAddProj_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.ecAddProjAncillas",
+    "QuantumComputation.Specs.ecAddProjProgram",
+    "QuantumComputation.Specs.ecAddProjTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Arithmetic.AddConstant",
+  "solution_module": "QuantumSolutions.Arithmetic.AddConstant",
+  "theorem_names": [
+    "QuantumComputation.Specs.add_constant_correctness",
+    "QuantumComputation.Specs.add_constant_k2048_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.addConstantAncillas",
+    "QuantumComputation.Specs.addConstantProgram",
+    "QuantumComputation.Specs.addConstantK2048TCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

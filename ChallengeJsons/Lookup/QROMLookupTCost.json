@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Lookup.TableLookup",
+  "solution_module": "QuantumSolutions.Lookup.TableLookup",
+  "theorem_names": [
+    "QuantumComputation.Specs.qromLookup_correctness",
+    "QuantumComputation.Specs.qromLookup_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.qromLookupAncillas",
+    "QuantumComputation.Specs.qromLookupProgram",
+    "QuantumComputation.Specs.qromLookupTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

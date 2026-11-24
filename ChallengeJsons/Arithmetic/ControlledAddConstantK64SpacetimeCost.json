@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Arithmetic.ControlledAddConstant",
+  "solution_module": "QuantumSolutions.Arithmetic.ControlledAddConstant",
+  "theorem_names": [
+    "QuantumComputation.Specs.controlled_add_constant_correctness",
+    "QuantumComputation.Specs.controlled_add_constant_k64_spacetime_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.controlledAddConstantAncillas",
+    "QuantumComputation.Specs.controlledAddConstantProgram",
+    "QuantumComputation.Specs.controlledAddConstantK64SpacetimeCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

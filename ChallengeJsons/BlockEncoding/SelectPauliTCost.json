@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.BlockEncoding.SelectPauli",
+  "solution_module": "QuantumSolutions.BlockEncoding.SelectPauli",
+  "theorem_names": [
+    "QuantumComputation.Specs.selectPauli_correctness",
+    "QuantumComputation.Specs.selectPauli_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.selectPauliAncillas",
+    "QuantumComputation.Specs.selectPauliProgram",
+    "QuantumComputation.Specs.selectPauliTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

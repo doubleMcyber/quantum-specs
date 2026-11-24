@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.PrimeField.FieldMul",
+  "solution_module": "QuantumSolutions.PrimeField.FieldMul",
+  "theorem_names": [
+    "QuantumComputation.Specs.fieldMul_correctness",
+    "QuantumComputation.Specs.fieldMul_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.fieldMulAncillas",
+    "QuantumComputation.Specs.fieldMulProgram",
+    "QuantumComputation.Specs.fieldMulTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

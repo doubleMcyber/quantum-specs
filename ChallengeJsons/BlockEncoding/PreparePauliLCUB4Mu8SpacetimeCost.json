@@ -1,0 +1,20 @@
+{
+  "challenge_module": "QuantumSpecs.BlockEncoding.PreparePauliLCU",
+  "solution_module": "QuantumSolutions.BlockEncoding.PreparePauliLCU",
+  "theorem_names": [
+    "QuantumComputation.Specs.prepare_correctness",
+    "QuantumComputation.Specs.prepare_b4mu8_spacetime_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.prepareGarbage",
+    "QuantumComputation.Specs.prepareAncillas",
+    "QuantumComputation.Specs.prepareProgram",
+    "QuantumComputation.Specs.prepareB4Mu8SpacetimeCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

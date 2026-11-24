@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Arithmetic.ControlledAdder",
+  "solution_module": "QuantumSolutions.Arithmetic.ControlledAdder",
+  "theorem_names": [
+    "QuantumComputation.Specs.controlled_adder_correctness",
+    "QuantumComputation.Specs.controlled_adder_k64_spacetime_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.controlledAdderAncillas",
+    "QuantumComputation.Specs.controlledAdderProgram",
+    "QuantumComputation.Specs.controlledAdderK64SpacetimeCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.ModularArithmetic.ModAdd",
+  "solution_module": "QuantumSolutions.ModularArithmetic.ModAdd",
+  "theorem_names": [
+    "QuantumComputation.Specs.modAdd_correctness",
+    "QuantumComputation.Specs.modAdd_b2048_t_count_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.modAddAncillas",
+    "QuantumComputation.Specs.modAddProgram",
+    "QuantumComputation.Specs.modAddB2048TCountCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

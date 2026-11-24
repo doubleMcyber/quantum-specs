@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Estimation.PhaseEstimation",
+  "solution_module": "QuantumSolutions.Estimation.PhaseEstimation",
+  "theorem_names": [
+    "QuantumComputation.Specs.phaseEst_correctness",
+    "QuantumComputation.Specs.phaseEst_rel_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.phaseEstQubits",
+    "QuantumComputation.Specs.phaseEstCircuit",
+    "QuantumComputation.Specs.phaseEstRelCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

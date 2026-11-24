@@ -1,0 +1,28 @@
+name = "quantumspecs"
+defaultTargets = ["QuantumSpecs"]
+
+[leanOptions]
+pp.unicode.fun = true
+autoImplicit = false
+maxSynthPendingDepth = 3
+
+# Google DeepMind's formal-quantum-computation, `discoveries` branch at the commit below.
+# Its QuantumComputation and QuantumComputationSpecs sources are identical to `main` at
+# 489edc7039aa4cdded53724b39ea90e33d2c88b4.
+# It adds the QuantumComputationDiscoveries library, which some solutions import.
+[[require]]
+name = "formal-quantum-computation"
+git = "https://github.com/google-deepmind/formal-quantum-computation"
+rev = "a88de8ff65d78af564b2373088ca369dc95f6547"
+
+[[lean_lib]]
+name = "QuantumSpecs"
+globs = ["QuantumSpecs.+"]
+[lean_lib.leanOptions]
+warn.sorry = false
+
+# One module per solution and no root module: a solution restates its spec, so two solutions
+# of one spec are never imported together.
+[[lean_lib]]
+name = "QuantumSolutions"
+globs = ["QuantumSolutions.+"]

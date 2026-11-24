@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Lookup.TableLookup",
+  "solution_module": "QuantumSolutions.Lookup.TableLookup",
+  "theorem_names": [
+    "QuantumComputation.Specs.qromBudgetUnlookup_correctness",
+    "QuantumComputation.Specs.qromBudgetUnlookup_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.qromBudgetUnlookupAncillas",
+    "QuantumComputation.Specs.qromBudgetUnlookupProgram",
+    "QuantumComputation.Specs.qromBudgetUnlookupTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

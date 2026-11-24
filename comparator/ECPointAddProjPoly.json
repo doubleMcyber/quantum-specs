@@ -1,0 +1,21 @@
+{
+  "challenge_module": "QuantumSpecs.EllipticCurve.ECPointAddProj",
+  "solution_module": "QuantumSolutions.EllipticCurve.ECPointAddProjPoly",
+  "theorem_names": [
+    "QuantumComputation.Specs.ecAddProj_correctness",
+    "QuantumComputation.Specs.ecAddProj_t_cost",
+    "QuantumComputation.Specs.ecAddProj_w256_const_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.ecAddProjAncillas",
+    "QuantumComputation.Specs.ecAddProjProgram",
+    "QuantumComputation.Specs.ecAddProjTCost",
+    "QuantumComputation.Specs.ecAddProjW256ConstCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

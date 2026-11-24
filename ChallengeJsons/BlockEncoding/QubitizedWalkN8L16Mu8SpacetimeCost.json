@@ -1,0 +1,20 @@
+{
+  "challenge_module": "QuantumSpecs.BlockEncoding.QubitizedWalk",
+  "solution_module": "QuantumSolutions.BlockEncoding.QubitizedWalk",
+  "theorem_names": [
+    "QuantumComputation.Specs.walk_correctness",
+    "QuantumComputation.Specs.walk_n8l16mu8_spacetime_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.walkAux",
+    "QuantumComputation.Specs.walkAncillas",
+    "QuantumComputation.Specs.walkProgram",
+    "QuantumComputation.Specs.walkN8L16Mu8SpacetimeCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

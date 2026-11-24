@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.ModularArithmetic.ModExp",
+  "solution_module": "QuantumSolutions.ModularArithmetic.ModExp",
+  "theorem_names": [
+    "QuantumComputation.Specs.modExp_correctness",
+    "QuantumComputation.Specs.modExp_l1280_b2048_t_count_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.modExpAncillas",
+    "QuantumComputation.Specs.modExpProgram",
+    "QuantumComputation.Specs.modExpL1280B2048TCountCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

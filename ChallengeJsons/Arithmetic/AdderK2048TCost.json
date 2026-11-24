@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.Arithmetic.Adder",
+  "solution_module": "QuantumSolutions.Arithmetic.Adder",
+  "theorem_names": [
+    "QuantumComputation.Specs.adder_correctness",
+    "QuantumComputation.Specs.adder_k2048_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.adderAncillas",
+    "QuantumComputation.Specs.adderProgram",
+    "QuantumComputation.Specs.adderK2048TCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

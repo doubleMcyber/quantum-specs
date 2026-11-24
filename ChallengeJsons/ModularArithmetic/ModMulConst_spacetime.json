@@ -1,0 +1,19 @@
+{
+  "challenge_module": "QuantumSpecs.ModularArithmetic.ModMulConst",
+  "solution_module": "QuantumSolutions.ModularArithmetic.ModMulConst",
+  "theorem_names": [
+    "QuantumComputation.Specs.modMulConst_correctness",
+    "QuantumComputation.Specs.modMulConst_b2048_spacetime_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.modMulConstAncillas",
+    "QuantumComputation.Specs.modMulConstProgram",
+    "QuantumComputation.Specs.modMulConstB2048SpacetimeCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}

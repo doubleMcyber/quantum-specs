@@ -1,0 +1,29 @@
+{
+  "challenge_module": "QuantumSpecs.Arithmetic.CompareConstant",
+  "solution_module": "QuantumSolutions.Arithmetic.CompareConstant",
+  "theorem_names": [
+    "QuantumComputation.Specs.compare_constant_correctness",
+    "QuantumComputation.Specs.compare_constant_k2048_spacetime_cost",
+    "QuantumComputation.Specs.compare_constant_k2048_t_cost",
+    "QuantumComputation.Specs.compare_constant_k64_spacetime_cost",
+    "QuantumComputation.Specs.compare_constant_k64_t_cost",
+    "QuantumComputation.Specs.compare_constant_spacetime_cost",
+    "QuantumComputation.Specs.compare_constant_t_cost"
+  ],
+  "definition_names": [
+    "QuantumComputation.Specs.compareConstantAncillas",
+    "QuantumComputation.Specs.compareConstantProgram",
+    "QuantumComputation.Specs.compareConstantK2048SpacetimeCost",
+    "QuantumComputation.Specs.compareConstantK2048TCost",
+    "QuantumComputation.Specs.compareConstantK64SpacetimeCost",
+    "QuantumComputation.Specs.compareConstantK64TCost",
+    "QuantumComputation.Specs.compareConstantSpacetimeCost",
+    "QuantumComputation.Specs.compareConstantTCost"
+  ],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "allow_disproofs": false
+}
