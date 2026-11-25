@@ -16,9 +16,12 @@ limitations under the License.
 import LowerBounds.Grover.ThreeFifthsBound
 import LowerBounds.Grover.FullBound
 import LowerBounds.Grover.RelCost
+import LowerBounds.Grover.RelCostFull
+import LowerBounds.Grover.ParallelBound
 
 /-!
-Prints the statement and the axioms of the Grover find-any lower bounds. Run after
+Prints the statements and the axioms of the Grover lower bounds (find-any at cell (1, 1), find-any
+and find-all at every cell `(m, k)`, and the relCost floors at cell (1, 1)). Run after
 `lake build LowerBounds` with
 
     lake env lean checks/GroverAxioms.lean
@@ -40,3 +43,21 @@ The expected axioms are `propext`, `Classical.choice` and `Quot.sound`, and no `
 #print GroverThreeFifths.RelCostFloor11
 #check @GroverThreeFifths.relCost_floor_11
 #print axioms GroverThreeFifths.relCost_floor_11
+#print GroverThreeFifths.RelCostFloor11Full
+#check @GroverThreeFifths.relCost_floor_11_full
+#print axioms GroverThreeFifths.relCost_floor_11_full
+
+#print GroverParallel.FindAnyLowerBoundMK
+#print GroverParallel.FindAllLowerBoundMK
+#print GroverParallel.FindAnyLowerBoundMKErr
+#print GroverParallel.FindAllLowerBoundMKErr
+#print GroverParallel.FullTargetAny
+#print GroverParallel.FullTargetAll
+#check @GroverParallel.fullTargetAny
+#print axioms GroverParallel.fullTargetAny
+#check @GroverParallel.fullTargetAll
+#print axioms GroverParallel.fullTargetAll
+#check @GroverParallel.findAny_35
+#print axioms GroverParallel.findAny_35
+#check @GroverParallel.findAll_35
+#print axioms GroverParallel.findAll_35

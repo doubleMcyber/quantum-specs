@@ -91,9 +91,10 @@ The baselines are textbook constructions. Where the table says a better-known co
 
 | Statement | Status | Notes |
 |---|---|---|
-| Grover find-any, one marked item, one oracle call per round (Google's specification, cell m = k = 1) | Closed to leading order | Every certified cost is at least (π/8 + 1/4)·√N − 4/√N for N ≥ 4, the leading constant of Google's verified solution (the Fang and Heunen weak-measurement loop). About 1.5 oracle calls at large N remain between the two. See the README |
-| The same cell with the constant π/8 + 1/4 | Proved | `findAny_lower_bound_full`. Earlier steps with the constants 3/5 (N ≥ 2^16) and 1/8 (N ≥ 32) remain in the repository. The relCost floor proved at this cell is 12/(5π); the floor 1/2 + 1/π is not yet compiled |
-| Grover find-any at the other cells of the grid, and find-all | Open | |
+| Grover find-any, every cell (m, k) of Google's grid (121 cells) | Closed to leading order | For all m, k ≥ 1, every certified cost of a circuit meeting Google's find-any correctness condition is at least (π/8 + 1/4)·t − 4/t with t = √(2^n/(m k)), for n ≥ 2 + ⌈log2(m k)⌉. Google's verified solutions certify the same leading constant in all 121 cells. Google's pre-rounding cost bound exceeds the floor by about 3/2 oracle rounds per marked set at large n (computed with 120-digit arithmetic, not proved in Lean). See the README |
+| Grover find-all, k = 1 (11 cells) | Closed to leading order | The same floor for the find-all correctness condition. At k = 1 Google's find-all reference cost and certified relCost equal the find-any ones; the two postconditions differ |
+| Grover find-all, k ≥ 2 (110 cells) | Open | Only the find-any floor is proved, 0.063 to 67 percent of the leading constant of Google's certified find-all cost |
+| Earlier steps at cell (1, 1), and the relCost floors there | Proved | Constants 3/5 (N ≥ 2^16) and 1/8 (N ≥ 32), and `findAny_lower_bound_full`. Every solution of the find-any challenge that claims cell (1, 1) certifies relCost above 1/2 + 1/π (`relCost_floor_11_full`). No relCost statement for the other cells is included |
 | Lower bounds on the T count of the arithmetic primitives above | Open | |
 
 ## 9. Fault tolerance
