@@ -125,6 +125,10 @@ Each specification was meant to be attacked by a reviewer trying to satisfy it w
 
 Every "no successful attack" above leans on one argument: a program that satisfies the library's correctness predicate acts as the exact unitary channel on valid inputs with clean ancillas. The reviewer proved this in Lean during the review, in expectation form, for every program including ones that loop or abort.
 
+## Roadmap
+
+`ROADMAP.md` lists the primitives that factoring, discrete-logarithm and chemistry resource estimates are built from, layer by layer, and marks which have a specification and a proved baseline here and which are open.
+
 ## Submitting a better solution
 
 1. Copy the baseline module, for example `QuantumSolutions/Arithmetic/Adder.lean`, to a new module such as `QuantumSolutions/Arithmetic/AdderYourName.lean`. A solution restates the whole specification in the namespace `QuantumComputation.Specs`, fills the holes and proves the frozen theorems. It does not import the specification module. Leave every declaration that is not a hole exactly as it is: the Comparator compares the compiled declarations, including their reducibility, which is why frozen helper definitions that mention a hole are `abbrev`s.
