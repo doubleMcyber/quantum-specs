@@ -97,6 +97,13 @@ and groverFindAll_correctness and the cost predicate of groverFindAny_rel_cost a
 groverFindAll_rel_cost from QuantumComputationSpecs/Algorithms/Grover.lean (Copyright 2026 Google
 LLC), with the circuit and its qubit count quantified instead of fixed.
 
+LowerBounds/Grover/ParallelRelCostStatement.lean has the same header line. Between its three pairs
+of markers it restates the types of the four definition holes of the find-any and find-all
+challenges, the program construction of groverFindAnyProgram and groverFindAllProgram, and the
+statements of groverFindAny_correctness, groverFindAny_rel_cost, groverFindAll_correctness and
+groverFindAll_rel_cost from QuantumComputationSpecs/Algorithms/Grover.lean (Copyright 2026 Google
+LLC), with each hole replaced by a field of a structure.
+
 The other files in LowerBounds/ copy no Google text; all but Lines.lean import Google's
 QuantumComputation and QuantumComputationSpecs libraries, directly or through other files in
 LowerBounds/, and use their definitions unmodified.
