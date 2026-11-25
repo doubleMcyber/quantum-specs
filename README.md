@@ -4,7 +4,7 @@ This repository contains frozen Lean 4 specifications of quantum arithmetic, tab
 
 The specifications and proofs were written with AI coding agents. Lean's kernel and the Comparator checked them.
 
-The repository also contains a machine-checked lower bound for one of Google's own specifications, Grover find-any search with one marked item and one oracle call per round. It is described under [Lower bound for Grover find-any search](#lower-bound-for-grover-find-any-search).
+The repository also contains a machine-checked lower bound for one of Google's own specifications, Grover find-any search with one marked item and one oracle call per round, whose leading constant matches the verified solution in Google's release. It is described under [Lower bound for Grover find-any search](#lower-bound-for-grover-find-any-search).
 
 ## What a specification is
 
@@ -67,56 +67,92 @@ A Comparator PASS shows that the solution proves the frozen statements with the 
 
 ## Lower bound for Grover find-any search
 
-`LowerBounds/Grover/` proves a lower bound on the cost that any solution of Google's Grover find-any specification (`QuantumComputationSpecs/Algorithms/Grover.lean`) can certify in the cell m = k = 1, that is, one marked item among N = 2^n and one oracle call per round.
+`LowerBounds/Grover/` proves lower bounds on the cost that any solution of Google's Grover find-any specification (`QuantumComputationSpecs/Algorithms/Grover.lean`) can certify in the cell m = k = 1, that is, one marked item among N = 2^n and one oracle call per round. The main theorem has the same leading constant as the verified solution in Google's release, so this cell is closed to leading order.
 
 ### What is proved
 
-Take any oracle circuit of the type the specification asks for at m = k = 1, on any number of qubits. It may measure mid-circuit, branch on classical outcomes, loop and stop adaptively. Suppose it returns the marked item with probability 1, from every input state and for every choice of marked item, which is what `groverFindAny_correctness` demands. Then every bound on its expected number of oracle calls that the specification's cost predicate accepts is at least (3/5)·√N, for every N ≥ 2^16 = 65,536.
+Take any oracle circuit of the type the specification asks for at m = k = 1, on any number of qubits. It may measure mid-circuit, branch on classical outcomes, loop and stop adaptively. Suppose it returns the marked item with probability 1, from every input state and for every choice of marked item, which is what `groverFindAny_correctness` demands. Then every bound on its expected number of oracle calls that the specification's cost predicate accepts is at least (π/8 + 1/4)·√N − 4/√N, for every N ≥ 4.
 
-In Lean, with the definitions in `LowerBounds/Grover/Statement.lean`:
+In Lean, with the definitions in `LowerBounds/Grover/FullStatement.lean`:
 
 ```lean
-theorem GroverThreeFifths.findAny_lower_bound_35 : GroverLowerBound.FindAnyLowerBound (3 / 5) 16
+theorem GroverThreeFifths.findAny_lower_bound_full : GroverThreeFifths.FullConstantTarget
 
-def FindAnyLowerBound (C : ℝ) (n₀ : ℕ) : Prop :=
+def FullConstantTarget : Prop :=
+  FindAnyLowerBoundErr (π / 8 + 1 / 4) (fun n ↦ 4 / √((2 : ℝ) ^ n)) 2
+
+def FindAnyLowerBoundErr (C : ℝ) (E : ℕ → ℝ) (n₀ : ℕ) : Prop :=
   ∀ n ≥ n₀, ∀ (Q : ℕ) (c : OracleDynamicCircuit (Unitary (2 ^ Q)) Var Q ((n + 1) * 1)),
     MeetsFindAnySpec c →
     ∀ bound : ℝ,
       AvgOracleCostBound 1
         (fun S ↦ CostModel.ofEmbeddedOracle (groverParallelMarkingOracle 1 S))
         (fun S ↦ findAnyProgramOf c S) bound →
-      C * √((2 : ℝ) ^ n) ≤ bound
+      C * √((2 : ℝ) ^ n) - E n ≤ bound
 ```
 
-`MeetsFindAnySpec c` is the postcondition of `groverFindAny_correctness` at m = k = 1 for every one-element marked set, and `findAnyProgramOf c S` is the program `groverFindAnyProgram` builds from the circuit (reset all qubits, then run `c` compiled with the marking oracle of S). The file also proves by `rfl` that the specification's own program at the cell (1, 1) is `findAnyProgramOf` applied to its circuit, so the theorem bounds whatever circuit a solution supplies. The definitions use Google's library unmodified, imported at the commit pinned in `lakefile.toml`.
+`MeetsFindAnySpec c` and `findAnyProgramOf c S` are defined in `LowerBounds/Grover/Statement.lean`. `MeetsFindAnySpec c` is the postcondition of `groverFindAny_correctness` at m = k = 1 for every one-element marked set, and `findAnyProgramOf c S` is the program `groverFindAnyProgram` builds from the circuit (reset all qubits, then run `c` compiled with the marking oracle of S). That file also proves by `rfl` that the specification's own program at the cell (1, 1) is `findAnyProgramOf` applied to its circuit, so the theorem bounds whatever circuit a solution supplies. The definitions use Google's library unmodified, imported at the commit pinned in `lakefile.toml`. The new declarations are in the namespace `GroverThreeFifths`, with the 3/5 theorem whose lemmas they reuse.
 
 The cost is the one the specification certifies. `AvgOracleCostBound` asks for a number q(S) for each marked set S such that `CostBound` holds for the program with the oracle of S, and bounds the average of q(S) over S. `CostBound` requires the expected number of oracle calls, counted by `CostModel.ofEmbeddedOracle`, to be at most q(S) from every initial state. The bound is therefore an average over the marked item of a worst case over initial states, and it holds for any number a solution could prove in `groverFindAny_rel_cost`.
 
-`LowerBounds/Grover/EighthBound.lean` proves the weaker `FindAnyLowerBound (1 / 8) 5` (N ≥ 32). The 3/5 proof reuses its lemmas.
+The error term is 4/√N. At N = 4 the right-hand side is about −0.71, so the statement says nothing there. It is positive from N = 8 on: about 0.40 at N = 8, π/2 ≈ 1.57 at N = 16, and within 0.016 of (π/8 + 1/4)·√N at N = 2^16.
 
 ### Comparison with Google's solution
 
-Google's verified solution for this specification (on the `discoveries` branch, written with Gemini) claims `groverFindAnyRelCost 1 1` close to 1/2 + 1/π against the reference scale (π/4)·√N, which is a cost of (π/8 + 1/4)·√N ≈ 0.6427·√N plus lower-order terms, proved for large n. For N ≥ 2^16 no solution can certify less than 0.6·√N, which is 6.6 percent below Google's constant. Stated as a ratio to the reference scale, the floor is 12/(5π) ≈ 0.764 against Google's 0.818. That ratio follows from the theorem in one step, but the step has not been written in Lean.
+Google's verified solution for this specification (on the `discoveries` branch, written with Gemini) claims `groverFindAnyRelCost 1 1` close to 1/2 + 1/π against the reference scale (π/4)·√N, which is a cost of (π/8 + 1/4)·√N ≈ 0.6427·√N plus lower-order terms, proved for large n. That is the leading constant of the theorem above. The algorithm at this cell is the weak-measurement loop of Fang and Heunen ([arXiv:2609.39621](https://arxiv.org/abs/2609.39621)), which Google's paper says its verified circuit matches. Google's paper reports improvements of up to 2.57 times over prior baselines for parallel search; at this cell its verified solution has the published Fang and Heunen constant, so no such gain is claimed here.
+
+The theorem shows that the Fang and Heunen constant is optimal to leading order over all programs that meet the specification. Their paper proved its optimality only within a restricted family, weakly measured loops with one checkpoint.
+
+The residual gap is lower order. Before rounding to a rational relCost, Google's proof of `groverFindAny_rel_cost` bounds the expected oracle calls for each marked set by a quantity bd(N), and its Lean file proves bd(N) ≤ (π/8 + 1/4)·√N + 5 for n ≥ 150. Evaluated in double-precision floating point, bd(N) − (π/8 + 1/4)·√N is 2.52 at N = 8 (its largest value), 1.502 at N = 2^16 and 1.50000 from N = 2^40 to N = 2^100; a hand expansion gives the limit 3/2. So Google's pre-rounding bound exceeds the lower bound by about 1.5 oracle calls at large N, and by at most about 3.9 calls for N ≥ 4. These values were computed in floating point and are not proved in Lean. Whether any of the gap is real or slack in one of the two proofs is open.
+
+### The relCost corollary
+
+`LowerBounds/Grover/RelCostStatement.lean` turns the four definition holes of the challenge into the fields of a structure `FindAnyFiller` and restates `groverFindAny_correctness` and `groverFindAny_rel_cost` with each hole replaced by the corresponding field (`SolvesFindAny`). `LowerBounds/Grover/RelCost.lean` proves
+
+```lean
+theorem GroverThreeFifths.relCost_floor_11 : GroverThreeFifths.RelCostFloor11
+
+def RelCostFloor11 : Prop :=
+  ∀ F : FindAnyFiller, SolvesFindAny F → F.cells 1 1 = true →
+    (12 / (5 * π) : ℝ) < (F.relCost 1 1 : ℝ)
+```
+
+that is, every solution of the challenge that claims cell (1, 1) certifies `groverFindAnyRelCost 1 1` above 12/(5π) ≈ 0.764. Google's solution certifies about 0.818. The proof derives the floor from the 3/5 theorem below; equality is excluded because relCost is rational and π is not. The file checks by `rfl` and `Iff.rfl` that Google's own holes, put into a `FindAnyFiller`, give the program `groverFindAnyProgram` and the conjunction of the two theorems as restated in the file.
+
+The stronger floor relCost 1 1 > 1/2 + 1/π, which matches Google's value to leading order, is not included. Its statement exists in the project's working files, but its proof had not been compiled when this release was made. Google's certified relCost exceeds 1/2 + 1/π by less than 1.9·10⁻²¹.
+
+### Earlier steps
+
+Two weaker theorems remain in the repository. They use `FindAnyLowerBound C n₀` from `Statement.lean`, which is `FindAnyLowerBoundErr` without the error term: every accepted bound is at least C·√N for every n ≥ n₀.
+
+```lean
+theorem GroverThreeFifths.findAny_lower_bound_35 : GroverLowerBound.FindAnyLowerBound (3 / 5) 16
+theorem GroverLowerBound.findAny_lower_bound : GroverLowerBound.FindAnyLowerBound (1 / 8) 5
+```
+
+The 3/5 bound (N ≥ 2^16) is in `ThreeFifthsBound.lean` and the 1/8 bound (N ≥ 32) in `EighthBound.lean`. The 3/5 proof reuses the lemmas of the 1/8 proof, and the full-constant proof (`FullPotential.lean`, `FullQuery.lean`, `FullBound.lean`) keeps the assembly of the 3/5 proof and replaces its potential function and its oracle-step lemma.
 
 ### What is not proved
 
-- The constant is 3/5, not π/8 + 1/4, so the theorem does not show that Google's solution is optimal at this cell. The gap between 0.6 and 0.6427 is open here.
-- Nothing is proved for N < 2^16, where the 1/8 bound (N ≥ 32) is the only result here.
+- Exact optimality. The two sides agree only to leading order, and about 1.5 oracle calls separate Google's pre-rounding bound from the lower bound at large N. The theorem does not rule out a solution that certifies a cost inside that gap, below Google's.
 - Only the cell m = k = 1 of find-any is covered. The other 120 cells of the grid and the find-all specification have no lower bound here.
-- The lower bound on `groverFindAnyRelCost` is on paper only, as described above.
+- Nothing is proved about small N beyond what the statement gives: it is empty at N = 4, and at N = 8 it gives only about 0.40 oracle calls.
+- The cost is Google's certified bound, a worst case over the initial state averaged over the marked item. Other cost measures, such as a bound averaged over initial states as well, are not covered.
+- The relCost floor proved in Lean is 12/(5π), not 1/2 + 1/π.
 
 ### How it was made and checked
 
-The proofs were written with AI coding agents and checked by Lean. `checks/GroverAxioms.lean` prints the statement and the axioms of both theorems; the expected axioms are `propext`, `Classical.choice` and `Quot.sound`. The files are copies of the project's working files in which only comments, module names, imports and the two namespace names changed; the export tool checked this mechanically by comparing the files with all comments removed. The library is compiled with Lean's default `autoImplicit` and `maxSynthPendingDepth` settings, under which it was developed (see `lakefile.toml`).
+The proofs were written with AI coding agents and checked by Lean. The statements were reviewed by AI agents; no human expert has reviewed the statements or the proofs. `checks/GroverAxioms.lean` prints the statements and the axioms of the theorems above; the expected axioms are `propext`, `Classical.choice` and `Quot.sound`. The files are copies of the project's working files in which only comments, module names, imports and the two namespace names changed; the export tool checked this mechanically by comparing the files with all comments removed. The library is compiled with Lean's default `autoImplicit` and `maxSynthPendingDepth` settings, under which it was developed (see `lakefile.toml`).
 
 ### Prior work
 
-We did not find this bound, or any constant above π/8 for this model, stated in the literature. Our search was limited (about a day of web and arXiv searches), so this is a report of what we found, not a claim of priority.
+We did not find the matching bound, or any lower bound with a constant above π/8 for this model, stated in the literature. Our search was limited: general web searches, arXiv abstract metadata, and the citation records of OpenAlex and INSPIRE, over about a day, without full-text search of arXiv. Some sources were judged from their abstracts or from search snippets only, and a paper posted in the last few days or using other terms would have been missed. This is a report of what we found, not a claim of priority.
 
 - Zalka ([quant-ph/9711070](https://arxiv.org/abs/quant-ph/9711070)) showed that Grover's algorithm is optimal for a fixed number of queries. Applied to algorithms truncated after t queries, exact bounds of that kind (also Dohotaru and Høyer, [arXiv:0810.3647](https://arxiv.org/abs/0810.3647)) give about (π/8)·√N for the expected number of queries; we did not find this derivation written out. Zalka also notes that measuring and restarting saves about 12 percent of the queries (about 0.690·√N), without claiming that this is optimal.
 - Montanaro ([arXiv:0908.3066](https://arxiv.org/abs/0908.3066), Proposition 2.3) proves an expected-query lower bound of about 0.206·√N for zero-error search with intermediate measurements.
-- Fang and Heunen ([arXiv:2609.39621](https://arxiv.org/abs/2609.39621)) give a weakly measured loop with (π/8 + 1/4 + o(1))·√N expected Grover iterations, the constant of Google's solution, and show that it is optimal within a family of weakly measured loops with one checkpoint. They do not claim optimality over all algorithms.
-- Belovs and Yolcu ([arXiv:2301.02003](https://arxiv.org/abs/2301.02003)) characterize Las Vegas query complexity, in a model with query skipping, by the adversary bound. We did not find an explicit constant for search derived from their result.
+- Fang and Heunen ([arXiv:2609.39621](https://arxiv.org/abs/2609.39621)) give a weakly measured loop with (π/8 + 1/4 + o(1))·√N expected Grover iterations and show that it is optimal within a family of weakly measured loops with one checkpoint. They do not claim optimality over all algorithms. In OpenAlex and INSPIRE the only work citing it was Google's paper ([arXiv:2611.09822](https://arxiv.org/abs/2611.09822)).
+- Andrés-Martínez and Heunen ([arXiv:2009.08832](https://arxiv.org/abs/2009.08832)) introduced weakly measured while loops for search, an earlier algorithm of the same kind; we judged it from its abstract and snippets and saw no lower bound for all programs.
+- Belovs and Yolcu ([arXiv:2301.02003](https://arxiv.org/abs/2301.02003)) characterize Las Vegas query complexity, in a model with query skipping, by the adversary bound. We did not find an explicit constant for search derived from their result, and their measure is not the cost of the specification.
 
 ## Building
 
@@ -145,13 +181,24 @@ The run passes when it prints `Your solution is okay!`. The sandbox needs bubble
 
 These steps were tested on 2026-11-24 on a Linux x86_64 cluster node, starting from a fresh copy of this repository's files, with elan and Lean 4.35.0 installed fresh and empty Lake and Mathlib caches. `lake exe cache get` fetched every dependency from GitHub at the revisions in `lake-manifest.json` and downloaded Mathlib's prebuilt files (about 2 minutes). `lake build` built the 19 specifications (about 2 minutes) and `lake build QuantumSolutions` built the 20 solutions (about 5 minutes on 8 cores). The sandboxed Comparator then passed on five configurations, each in about 2 minutes: PreparePauliLCUAlias, Adder, TableLookup, SelectPauli and ECPointAddProjPoly. The other fifteen configurations were not rerun from this fresh copy.
 
-The lower-bound library was tested the same way in job 2021295 on a Linux x86_64 cluster node with 8 cores, from a fresh copy of this repository's files with elan, Lean 4.35.0 and the caches installed fresh. It started on 2026-11-24 (US Pacific time) and ran for 10 minutes 21 seconds. `lake exe cache get` took 204 seconds. `lake build LowerBounds` took 290 seconds, which includes compiling the needed parts of Google's library, and finished without errors (with deprecation warnings for some Mathlib lemma names). `lake env lean checks/GroverAxioms.lean` printed
+The lower-bound library, with the matching bound and the relCost corollary, was tested the same way in job 2021637 on a Linux x86_64 cluster node with 8 cores, from a fresh copy of this repository's files with elan, Lean 4.35.0 and the caches installed fresh. It started on 2026-11-25 (US Pacific time) and ran for 12 minutes 25 seconds. `lake exe cache get` took 207 seconds. `lake build LowerBounds` took 399 seconds, which includes compiling the needed parts of Google's library, and built all 17 modules without errors and without `sorry` (with deprecation and linter warnings). `lake env lean checks/GroverAxioms.lean` took 41 seconds. Besides the printed definitions, it reported
 
 ```
 GroverThreeFifths.findAny_lower_bound_35 : GroverLowerBound.FindAnyLowerBound (3 / 5) 16
 'GroverThreeFifths.findAny_lower_bound_35' depends on axioms: [propext, Classical.choice, Quot.sound]
 'GroverLowerBound.findAny_lower_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+def GroverThreeFifths.FullConstantTarget : Prop :=
+GroverThreeFifths.FindAnyLowerBoundErr (Real.pi / 8 + 1 / 4) (fun n => 4 / √(2 ^ n)) 2
+GroverThreeFifths.findAny_lower_bound_full : GroverThreeFifths.FullConstantTarget
+'GroverThreeFifths.findAny_lower_bound_full' depends on axioms: [propext, Classical.choice, Quot.sound]
+def GroverThreeFifths.RelCostFloor11 : Prop :=
+∀ (F : GroverThreeFifths.FindAnyFiller),
+  GroverThreeFifths.SolvesFindAny F → F.cells 1 1 = true → 12 / (5 * Real.pi) < ↑(F.relCost 1 1)
+GroverThreeFifths.relCost_floor_11 : GroverThreeFifths.RelCostFloor11
+'GroverThreeFifths.relCost_floor_11' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
+
+In the same job, a separate file outside this repository checked that Google's own `groverFindAny_correctness` and `groverFindAny_rel_cost` type-check as a proof of `SolvesFindAny` for Google's holes, so for Google's holes the restatement in `SolvesFindAny` is the two challenge theorems as compiled from Google's specification.
 
 `lake exe cache get` needs the `leantar` program that the Lean 4.35.0 toolchain ships in its `bin` directory. If it reports that `leantar` was not found, reinstall the toolchain with elan.
 
@@ -206,6 +253,6 @@ A change to a specification's statement is a new specification and needs a new b
 
 ## Credits and licence
 
-This work builds on Google DeepMind's [formal-quantum-computation](https://github.com/google-deepmind/formal-quantum-computation), released under the Apache License 2.0 and described in S. Shirobokov et al., "Discovering formally verified quantum programs with AI", [arXiv:2611.09822](https://arxiv.org/abs/2611.09822) (2026). The specification format, the circuit and resource-counting framework, the correctness predicates and the Comparator workflow are theirs. Nine solution files contain sections copied from the `discoveries` branch of that repository, marked `GOOGLE-DERIVED`; each names Google LLC in its header and states its modifications, and `NOTICE` lists them. `LowerBounds/Grover/Statement.lean` restates three definitions from Google's Grover specification in the same way. This repository is not affiliated with or endorsed by Google DeepMind.
+This work builds on Google DeepMind's [formal-quantum-computation](https://github.com/google-deepmind/formal-quantum-computation), released under the Apache License 2.0 and described in S. Shirobokov et al., "Discovering formally verified quantum programs with AI", [arXiv:2611.09822](https://arxiv.org/abs/2611.09822) (2026). The specification format, the circuit and resource-counting framework, the correctness predicates and the Comparator workflow are theirs. Nine solution files contain sections copied from the `discoveries` branch of that repository, marked `GOOGLE-DERIVED`; each names Google LLC in its header and states its modifications, and `NOTICE` lists them. `LowerBounds/Grover/Statement.lean` restates three definitions from Google's Grover specification in the same way, and `LowerBounds/Grover/RelCostStatement.lean` restates the challenge's hole types, its program construction and the statements of two of its theorems. This repository is not affiliated with or endorsed by Google DeepMind.
 
 Copyright 2026 Marlon Moenius. Licensed under the Apache License, Version 2.0; see `LICENSE`.

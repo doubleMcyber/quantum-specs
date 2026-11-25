@@ -28,7 +28,8 @@ marked item is in `res` with probability one, from every input state), and every
 `C * √(2 ^ n) ≤ bound`.
 
 This file states the bound and proves nothing. `EighthBound.lean` proves it with `C = 1 / 8`,
-`n₀ = 5`; `ThreeFifthsBound.lean` proves it with `C = 3 / 5`, `n₀ = 16`.
+`n₀ = 5`; `ThreeFifthsBound.lean` proves it with `C = 3 / 5`, `n₀ = 16`. `FullStatement.lean`
+states the same bound with an error term, which `FullBound.lean` proves with `C = π / 8 + 1 / 4`.
 
 The three definitions between the GOOGLE-DERIVED markers restate, at `m = k = 1`, the program
 construction of `groverFindAnyProgram`, the postcondition of `groverFindAny_correctness` and the

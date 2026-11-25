@@ -82,6 +82,14 @@ GOOGLE-DERIVED below)" in its header. Between the markers BEGIN GOOGLE-DERIVED a
 GOOGLE-DERIVED it restates, at m = k = 1, the program construction of groverFindAnyProgram, the
 postcondition of groverFindAny_correctness and the cost predicate of groverFindAny_rel_cost from
 QuantumComputationSpecs/Algorithms/Grover.lean (Copyright 2026 Google LLC), with the circuit and
-its qubit count quantified instead of fixed. The other files in LowerBounds/ copy no Google
-text; all but Lines.lean import Google's QuantumComputation and QuantumComputationSpecs libraries
-and use their definitions unmodified.
+its qubit count quantified instead of fixed.
+
+LowerBounds/Grover/RelCostStatement.lean has the same header line. Between its two pairs of
+markers it restates the types of the four definition holes of the find-any challenge, the program
+construction of groverFindAnyProgram, and the statements of groverFindAny_correctness and
+groverFindAny_rel_cost from QuantumComputationSpecs/Algorithms/Grover.lean (Copyright 2026 Google
+LLC), with each hole replaced by a field of a structure.
+
+The other files in LowerBounds/ copy no Google text; all but Lines.lean import Google's
+QuantumComputation and QuantumComputationSpecs libraries, directly or through other files in
+LowerBounds/, and use their definitions unmodified.

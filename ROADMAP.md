@@ -8,7 +8,7 @@ Status words:
 - **Statement**: a specification is here; no solution yet.
 - **Open**: nothing here yet.
 
-In the lower-bounds section, **Proved** means a lower bound on the cost any solution can certify is proved in Lean in this repository.
+In the lower-bounds section, **Proved** means a lower bound on the cost any solution can certify is proved in Lean in this repository. **Closed to leading order** means such a lower bound is proved and its leading term equals that of a verified solution.
 
 The baselines are textbook constructions. Where the table says a better-known construction exists, that construction is an open target for the same frozen statement.
 
@@ -91,8 +91,8 @@ The baselines are textbook constructions. Where the table says a better-known co
 
 | Statement | Status | Notes |
 |---|---|---|
-| Grover find-any, one marked item, one oracle call per round (Google's specification, cell m = k = 1) | Proved | Every certified cost is at least (3/5)·√N for N ≥ 2^16; Google's solution has (π/8 + 1/4)·√N ≈ 0.643·√N. See the README |
-| The same cell with the constant π/8 + 1/4, which would make Google's solution optimal up to lower-order terms | Open | |
+| Grover find-any, one marked item, one oracle call per round (Google's specification, cell m = k = 1) | Closed to leading order | Every certified cost is at least (π/8 + 1/4)·√N − 4/√N for N ≥ 4, the leading constant of Google's verified solution (the Fang and Heunen weak-measurement loop). About 1.5 oracle calls at large N remain between the two. See the README |
+| The same cell with the constant π/8 + 1/4 | Proved | `findAny_lower_bound_full`. Earlier steps with the constants 3/5 (N ≥ 2^16) and 1/8 (N ≥ 32) remain in the repository. The relCost floor proved at this cell is 12/(5π); the floor 1/2 + 1/π is not yet compiled |
 | Grover find-any at the other cells of the grid, and find-all | Open | |
 | Lower bounds on the T count of the arithmetic primitives above | Open | |
 

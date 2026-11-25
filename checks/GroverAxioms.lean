@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -/
 import LowerBounds.Grover.ThreeFifthsBound
+import LowerBounds.Grover.FullBound
+import LowerBounds.Grover.RelCost
 
 /-!
 Prints the statement and the axioms of the Grover find-any lower bounds. Run after
@@ -28,3 +30,13 @@ The expected axioms are `propext`, `Classical.choice` and `Quot.sound`, and no `
 #check @GroverThreeFifths.findAny_lower_bound_35
 #print axioms GroverThreeFifths.findAny_lower_bound_35
 #print axioms GroverLowerBound.findAny_lower_bound
+
+#print GroverThreeFifths.FindAnyLowerBoundErr
+#print GroverThreeFifths.FullConstantTarget
+#check @GroverThreeFifths.findAny_lower_bound_full
+#print axioms GroverThreeFifths.findAny_lower_bound_full
+
+#print GroverThreeFifths.SolvesFindAny
+#print GroverThreeFifths.RelCostFloor11
+#check @GroverThreeFifths.relCost_floor_11
+#print axioms GroverThreeFifths.relCost_floor_11
