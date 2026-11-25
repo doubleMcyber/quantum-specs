@@ -19,12 +19,15 @@ import LowerBounds.Grover.RelCost
 import LowerBounds.Grover.RelCostFull
 import LowerBounds.Grover.ParallelBound
 import LowerBounds.Grover.ParallelRelCost
+import LowerBounds.Grover.FindAllOneSlot
+import LowerBounds.Grover.FindAllSlots
+import LowerBounds.Grover.FindAllReveal
 
 /-!
 Prints the statements and the axioms of the Grover lower bounds (find-any at cell (1, 1), find-any
-and find-all at every cell `(m, k)`, the relCost floors at cell (1, 1), and the find-any and
-find-all relCost floors at every cell). Run after
-`lake build LowerBounds` with
+and find-all at every cell `(m, k)`, the relCost floors at cell (1, 1), the find-any and find-all
+relCost floors at every cell, and the three find-all floors: one slot, `m` slots and reveal).
+Run after `lake build LowerBounds` with
 
     lake env lean checks/GroverAxioms.lean
 
@@ -72,3 +75,22 @@ The expected axioms are `propext`, `Classical.choice` and `Quot.sound`, and no `
 #print axioms GroverParallel.relCost_floor_any
 #check @GroverParallel.relCost_floor_all
 #print axioms GroverParallel.relCost_floor_all
+
+#print GroverParallel.jc
+#print GroverParallel.jdelta
+#print GroverParallel.FL
+#check @GroverParallel.findAll_floor_FL
+#print axioms GroverParallel.findAll_floor_FL
+#print GroverParallel.RelCostFloorAllB
+#check @GroverParallel.relCost_floor_allB
+#print axioms GroverParallel.relCost_floor_allB
+#check @GroverParallel.findAll_floor_FL_m
+#print axioms GroverParallel.findAll_floor_FL_m
+#print GroverParallel.RelCostFloorAllC
+#check @GroverParallel.relCost_floor_allC
+#print axioms GroverParallel.relCost_floor_allC
+#check @GroverParallel.findAll_floor_reveal
+#print axioms GroverParallel.findAll_floor_reveal
+#print GroverParallel.RelCostFloorAllD
+#check @GroverParallel.relCost_floor_allD
+#print axioms GroverParallel.relCost_floor_allD

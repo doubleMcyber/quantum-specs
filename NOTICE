@@ -104,6 +104,9 @@ statements of groverFindAny_correctness, groverFindAny_rel_cost, groverFindAll_c
 groverFindAll_rel_cost from QuantumComputationSpecs/Algorithms/Grover.lean (Copyright 2026 Google
 LLC), with each hole replaced by a field of a structure.
 
-The other files in LowerBounds/ copy no Google text; all but Lines.lean import Google's
-QuantumComputation and QuantumComputationSpecs libraries, directly or through other files in
-LowerBounds/, and use their definitions unmodified.
+The other files in LowerBounds/, including the find-all files LowerBounds/Grover/FindAll*.lean,
+copy no Google text. Lines.lean, FindAllBlockPoly.lean, FindAllJohnson.lean,
+FindAllJohnsonPotential.lean, FindAllJohnsonPotentialValue.lean and FindAllTrace.lean import only
+Mathlib, directly or through each other. All the others import Google's QuantumComputation and
+QuantumComputationSpecs libraries, directly or through other files in LowerBounds/, and use their
+definitions unmodified.

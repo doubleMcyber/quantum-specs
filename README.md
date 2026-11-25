@@ -4,7 +4,7 @@ This repository contains frozen Lean 4 specifications of quantum arithmetic, tab
 
 The specifications and proofs were written with AI coding agents. Lean's kernel and the Comparator checked them.
 
-The repository also contains machine-checked lower bounds for one of Google's own specifications, Grover search with m oracle slots per round and k marked items. For find-any they have the same leading constant as the verified solutions in Google's release in all 121 cells of its grid; for find-all they do so only in the 11 cells with k = 1. They are described under [Lower bounds for Grover search](#lower-bounds-for-grover-search).
+The repository also contains machine-checked lower bounds for one of Google's own specifications, Grover search with m oracle slots per round and k marked items. For find-any they have the same leading constant as the verified solutions in Google's release in all 121 cells of its grid; for find-all they do so only in the 11 cells with k = 1. In the other 110 find-all cells, three further floors give at least 0.648 of the leading constant that Google's solution certifies; those cells are not closed. They are described under [Lower bounds for Grover search](#lower-bounds-for-grover-search).
 
 ## What a specification is
 
@@ -67,7 +67,7 @@ A Comparator PASS shows that the solution proves the frozen statements with the 
 
 ## Lower bounds for Grover search
 
-`LowerBounds/Grover/` proves lower bounds on the cost that any solution of Google's Grover search specifications (`QuantumComputationSpecs/Algorithms/Grover.lean`) can certify. The specifications pose two problems, find-any and find-all, each on a grid of 121 cells (m, k): m ∈ {1, 2, 4, …, 1024} is the number of oracle slots per round and k ∈ {1, 2, 4, …, 1024} the number of marked items among N = 2^n. For find-any the main theorem has the same leading constant as Google's verified solutions in all 121 cells, so these cells are closed to leading order. For find-all it closes the 11 cells with k = 1 to leading order and leaves the other 110 open.
+`LowerBounds/Grover/` proves lower bounds on the cost that any solution of Google's Grover search specifications (`QuantumComputationSpecs/Algorithms/Grover.lean`) can certify. The specifications pose two problems, find-any and find-all, each on a grid of 121 cells (m, k): m ∈ {1, 2, 4, …, 1024} is the number of oracle slots per round and k ∈ {1, 2, 4, …, 1024} the number of marked items among N = 2^n. For find-any the main theorem has the same leading constant as Google's verified solutions in all 121 cells, so these cells are closed to leading order. For find-all it closes the 11 cells with k = 1 to leading order. For the other 110 find-all cells, three further theorems (see [The find-all floors](#the-find-all-floors)) give floors of at least 0.648 of the leading constant that Google's find-all solution certifies; none of these cells is closed.
 
 ### What is proved
 
@@ -106,10 +106,9 @@ At the smallest n the statement says nothing. On Google's grid m k is a power of
 |---|---|---|
 | find-any, every (m, k) | 121 | Closed to leading order |
 | find-all, k = 1 | 11 | Closed to leading order |
-| find-all, k = 2 and m ≥ 2 | 10 | Not closed; the floor is 51 to 67 percent of Google's leading constant |
-| find-all, the other cells with k ≥ 2 | 100 | Not closed; the floor is 0.063 to 45 percent of Google's leading constant |
+| find-all, k ≥ 2 | 110 | Not closed; the best of the three find-all floors is 0.648 to 0.977 of Google's leading constant |
 
-Closed to leading order means that the proved floor and the cost Google's solution certifies have the same leading term, up to the rounding of Google's rational relCost, which lies less than 1.9·10⁻²¹ above 1/2 + 1/π. It says nothing about the lower-order terms; see the comparison below. The percentages compare the leading constant of the floor with the leading constant of the cost Google's find-all solution certifies in each cell. They are computed from the relCost values in Google's solution files, not proved in Lean.
+Closed to leading order means that the proved floor and the cost Google's solution certifies have the same leading term, up to the rounding of Google's rational relCost, which lies less than 1.9·10⁻²¹ above 1/2 + 1/π. It says nothing about the lower-order terms; see the comparison below. For the 110 find-all cells with k ≥ 2, the table compares the leading constant of the best of the three find-all floors with the leading constant of the cost Google's find-all solution certifies in each cell. The ratios are computed from Google's certified relCost values in its solution files; Lean proves the floors, not the ratios. The smallest ratio is 0.6483, at (m, k) = (4, 4), and the largest is 0.977, at (1, 1024). The one-slot floor is the best of the three in 10 cells, the F_L/m floor in 58 and the reveal floor in 42.
 
 ### Comparison with Google's solutions
 
@@ -117,7 +116,7 @@ Google's find-any solution is a weak-measurement loop. In units of the reference
 
 The residual gap is lower order. Before rounding to a rational relCost, Google's proof of `groverFindAny_rel_cost` bounds the expected oracle rounds for each marked set by a quantity bd, and a lemma in its solution file (`asymp_schedule_bds`) proves bd ≤ (π/8 + 1/4)·t + 5 for n ≥ 150 + ⌈log2 m⌉ + ⌈log2 k⌉. In that range Google's pre-rounding bound and the floor therefore differ by at most 5 + 4/t rounds per marked set. Evaluated with 120-digit arithmetic (mpmath), bd minus the floor (π/8 + 1/4)·t − 4/t is 1.500000000000 to 12 digits in each of the 121 cells, at every n from 150 + ⌈log2 m⌉ + ⌈log2 k⌉ to 40 above it; a hand expansion at cell (1, 1) gives the limit 3/2. So Google's pre-rounding bound exceeds the lower bound by about 3/2 oracle rounds per marked set at large n. These values were computed, not proved in Lean. Whether any of the gap is real or slack in one of the two proofs is open.
 
-Google scores find-all against `vanillaFindAllCost n m k` = (π/4)·H(k)·√k·t, where H(k) is the sum of 1/√r for r = 1, …, k. At k = 1 this equals the find-any reference, and Google's find-all solution certifies the same rational relCost in the 11 cells with k = 1, so the find-all theorem closes them to leading order in the same sense. The two specifications still differ at k = 1: the find-all postcondition `decodeTargets n 1 (σ res) = S` reads the result modulo 2^n, so it also accepts a result that agrees with the marked item only modulo 2^n, which the find-any postcondition rejects. `fullTargetAll` is proved for the find-all postcondition as written. For k ≥ 2 the theorem gives only the find-any floor (π/8 + 1/4)·t, far below Google's find-all costs: a factor of about 2.2 below at m = 1, k = 2 and about 1,600 below at m = 1, k = 1024. These 110 cells are not closed, and for most of them the floor is not a useful bound.
+Google scores find-all against `vanillaFindAllCost n m k` = (π/4)·H(k)·√k·t, where H(k) is the sum of 1/√r for r = 1, …, k. At k = 1 this equals the find-any reference, and Google's find-all solution certifies the same rational relCost in the 11 cells with k = 1, so the find-all theorem closes them to leading order in the same sense. The two specifications still differ at k = 1: the find-all postcondition `decodeTargets n 1 (σ res) = S` reads the result modulo 2^n, so it also accepts a result that agrees with the marked item only modulo 2^n, which the find-any postcondition rejects. `fullTargetAll` is proved for the find-all postcondition as written. For k ≥ 2 the theorem gives only the find-any floor (π/8 + 1/4)·t, far below Google's find-all costs: a factor of about 2.2 below at m = 1, k = 2 and about 1,600 below at m = 1, k = 1024. The find-all floors below are larger in all of these 110 cells, but none of the cells is closed.
 
 ### The relCost floors
 
@@ -151,9 +150,76 @@ def RelCostFloorAll : Prop :=
 
 The first says that every solution of the find-any challenge certifies `groverFindAnyRelCost m k` above 1/2 + 1/π in every cell (m, k) with m, k ≥ 1 that it claims, which includes every cell of Google's grid. Its proof applies `fullTargetAny` and lets n grow, as at cell (1, 1). In each of the 121 cells, Google's solution certifies a value less than 1.9·10⁻²¹ above the floor.
 
-The second applies `fullTargetAll` in the same way. Because `vanillaFindAllCost n m k` = (π/4)·H(k)·√k·t, it says relCost ≥ (1/2 + 1/π)/(H(k)·√k) in every claimed cell; the inequality is the same at every n. At k = 1 this is the floor 1/2 + 1/π, stated without strict inequality. For k ≥ 2 it is only the find-any floor expressed in find-all units, and it is weak: by the comparison in the table above, it is 0.063 percent (m = 1, k = 1024) to 67 percent of the relCost that Google's find-all solution certifies in the same cell.
+The second applies `fullTargetAll` in the same way. Because `vanillaFindAllCost n m k` = (π/4)·H(k)·√k·t, it says relCost ≥ (1/2 + 1/π)/(H(k)·√k) in every claimed cell; the inequality is the same at every n. At k = 1 this is the floor 1/2 + 1/π, stated without strict inequality. For k ≥ 2 it is only the find-any floor expressed in find-all units, and it is weak: it is 0.063 percent (m = 1, k = 1024) to 67 percent of the relCost that Google's find-all solution certifies in the same cell (computed from Google's solution files, not proved in Lean). The reveal floor `relCost_floor_allD` below is √k times this floor in every cell.
 
 Both theorems say something only if some filler satisfies `SolvesFindAny` or `SolvesFindAll`. This repository contains no such filler. That Google's solutions are one rests on Google's solution files on the `discoveries` branch, which this library does not import or check. The examples at the end of `ParallelRelCostStatement.lean` check, for Google's own holes put into a filler, that its programs are `groverFindAnyProgram` and `groverFindAllProgram` (`rfl`), that `SolvesFindAny` and `SolvesFindAll` unfold to the restated theorems (`Iff.rfl`), and that the types of Google's four challenge theorems are exactly the conjuncts of `SolvesFindAny` and `SolvesFindAll`. The specification leaves those theorems open, so the examples check types, not proofs. The statements `RelCostFloorAny` and `RelCostFloorAll` were reviewed against Google's specification by an AI agent that did not write them, which found them faithful with the caveats above; no human has reviewed them.
+
+### The find-all floors
+
+Three further theorems bound the cost of find-all circuits with k ≥ 2 marked items. Their hypothesis is the plain find-all specification: a circuit `c` with m oracle slots per round that meets `MeetsFindAllSpec k c`, and a bound that the specification's cost predicate accepts, exactly as in `FindAllLowerBoundMKErr` above. They use
+
+    F_L(N, k) = Σ_{i=0}^{k} δ(N, k, i) · (1 − C(N, i)/C(N, k + 1)),   δ(N, k, i) = (N − 2i) / (2·√((k + 1 − i)(N − k − 1 − i))),
+
+where C(N, i) is the binomial coefficient; this is `GroverParallel.FL` in `FindAllJohnsonPotential.lean`. In Lean:
+
+```lean
+theorem GroverParallel.findAll_floor_FL {n k Q : ℕ} (hk : 1 ≤ k) (hN : 2 * k ≤ 2 ^ n)
+    (c : OracleDynamicCircuit (Unitary (2 ^ Q)) Var Q ((n + 1) * 1))
+    (hmeets : MeetsFindAllSpec k c) (bound : ℝ)
+    (hbound : AvgOracleCostBound k
+        (fun S ↦ CostModel.ofEmbeddedOracle (groverParallelMarkingOracle 1 S))
+        (fun S ↦ programOf c S) bound) :
+    FL (2 ^ n) (k - 1) ≤ bound
+
+theorem GroverParallel.findAll_floor_FL_m {n m k Q : ℕ} (hm : 1 ≤ m) (hk : 1 ≤ k) (hN : 2 * k ≤ 2 ^ n)
+    (c : OracleDynamicCircuit (Unitary (2 ^ Q)) Var Q ((n + 1) * m))
+    (hmeets : MeetsFindAllSpec k c) (bound : ℝ)
+    (hbound : AvgOracleCostBound k
+        (fun S ↦ CostModel.ofEmbeddedOracle (groverParallelMarkingOracle m S))
+        (fun S ↦ programOf c S) bound) :
+    FL (2 ^ n) (k - 1) ≤ (m : ℝ) * bound
+
+theorem GroverParallel.findAll_floor_reveal {n m k Q : ℕ} (hm : 1 ≤ m) (hk : 1 ≤ k)
+    (hn : 4 * m ≤ 2 ^ n - (k - 1))
+    (c : OracleDynamicCircuit (Unitary (2 ^ Q)) Var Q ((n + 1) * m))
+    (hmeets : MeetsFindAllSpec k c) (bound : ℝ)
+    (hbound : AvgOracleCostBound k
+        (fun S ↦ CostModel.ofEmbeddedOracle (groverParallelMarkingOracle m S))
+        (fun S ↦ programOf c S) bound) :
+    (π / 8 + 1 / 4) * √(((2 ^ n - (k - 1) : ℕ) : ℝ) / m) -
+        4 / √(((2 ^ n - (k - 1) : ℕ) : ℝ) / m) ≤ bound
+
+theorem GroverParallel.FL_lower (N k : ℕ) (hk : 1 ≤ k) (hN : 4 * k ≤ N) :
+    (1 / 2 - 2 * (k : ℝ) / N) * groverHarmonicSqrtSum k * √(N : ℝ) ≤ FL N (k - 1)
+```
+
+The one-slot floor (`FindAllOneSlotBound.lean`) says that for m = 1, k ≥ 1 and 2k ≤ 2^n, every accepted bound is at least F_L(2^n, k − 1). The F_L/m floor (`FindAllSlots.lean`) says that for m, k ≥ 1 and 2k ≤ 2^n, every accepted bound is at least F_L(2^n, k − 1)/m. The reveal floor (`FindAllReveal.lean`) says that for m, k ≥ 1 and 4m ≤ 2^n − k + 1, every accepted bound is at least (π/8 + 1/4)·t − 4/t with t = √((2^n − k + 1)/m). Its proof chooses a set K of k − 1 marked items whose average cost over the remaining item is at most the overall average, and runs the find-any argument for that last item with the oracle for K as a common part of every call. The set K appears only inside the proof; the theorem assumes nothing beyond the find-all specification. Like the find-any bound, the reveal floor is negative for t near 2. `FL_lower` gives F_L(N, k − 1) ≥ (1/2 − 2k/N)·H(k)·√N for 4k ≤ N, an explicit lower bound for the sum.
+
+`FindAllOneSlotStatement.lean`, `FindAllSlotsStatement.lean` and `FindAllRevealStatement.lean` state the resulting relCost floors against the holes of the find-all challenge, with `FindAllFiller` and `SolvesFindAll` from `ParallelRelCostStatement.lean` and without the cell-bookkeeping theorems:
+
+```lean
+theorem GroverParallel.relCost_floor_allB : GroverParallel.RelCostFloorAllB
+theorem GroverParallel.relCost_floor_allC : GroverParallel.RelCostFloorAllC
+theorem GroverParallel.relCost_floor_allD : GroverParallel.RelCostFloorAllD
+
+def RelCostFloorAllB : Prop :=
+  ∀ F : FindAllFiller, SolvesFindAll F → ∀ k : ℕ, 1 ≤ k → F.cells 1 k = true →
+    (2 / π : ℝ) < (F.relCost 1 k : ℝ)
+
+def RelCostFloorAllC : Prop :=
+  ∀ F : FindAllFiller, SolvesFindAll F → ∀ m k : ℕ, 1 ≤ m → 1 ≤ k → F.cells m k = true →
+    (2 / π : ℝ) / √(m : ℝ) ≤ (F.relCost m k : ℝ)
+
+def RelCostFloorAllD : Prop :=
+  ∀ F : FindAllFiller, SolvesFindAll F → ∀ m k : ℕ, 1 ≤ m → 1 ≤ k → F.cells m k = true →
+    (1 / 2 + 1 / π : ℝ) / groverHarmonicSqrtSum k ≤ (F.relCost m k : ℝ)
+```
+
+`groverHarmonicSqrtSum k` is H(k). Every filler that satisfies `SolvesFindAll` and claims a cell (1, k) with k ≥ 1 has relCost above 2/π ≈ 0.6366 there. At k = 1 this is weaker than the floor 1/2 + 1/π above. `relCost_floor_allC` and `relCost_floor_allD` are non-strict (≤). They come from letting n grow in the F_L/m and reveal floors, so they bound the constant relCost that a solution certifies and give no cost bound at any fixed n. The floor (2/π)/√m of `relCost_floor_allC` loses a factor √m against Google's reference cost and tends to 0 as m grows; at m = 1 it is the non-strict form of `relCost_floor_allB`. At k = 1 the floor of `relCost_floor_allD` is 1/2 + 1/π, which `relCost_floor_all` already gives.
+
+In each of the 110 find-all cells with k ≥ 2, the best of the three relCost floors is at least 0.648 of the relCost that Google's find-all solution certifies; the ratio ranges from 0.6483 at (m, k) = (4, 4) to 0.977 at (1, 1024). At m = 1 the one-slot floor gives 0.838 (k = 2) to 0.977 (k = 1024). The one-slot floor is the best in the 10 cells with m = 1, the F_L/m floor in 58 cells and the reveal floor in 42. These ratios are computed from Google's certified relCost values and are not proved in Lean as ratios. Google's certified constants are above every floor in all 110 cells, and none of these cells is closed.
+
+Like the floors above, these say something only if some filler satisfies `SolvesFindAll`, which this repository does not show for Google's solution. The proofs use a potential built from the Johnson scheme on k-sets (`FindAllJohnson.lean` to `FindAllJohnsonPotentialValue.lean`) in place of the scalar potential of the find-any proof, and the reveal floor adapts the weight argument of the find-any proof to calls that share a common unitary (`FindAllRevealWeight.lean`, `FindAllRevealBound.lean`).
 
 ### Earlier steps
 
@@ -169,16 +235,16 @@ The 3/5 bound (N ≥ 2^16) is in `ThreeFifthsBound.lean` and the 1/8 bound (N �
 ### What is not proved
 
 - Matching lower-order terms. The two sides agree only to leading order. Google's own lemma leaves at most 5 + 4/t oracle rounds per marked set between its certified bound and the floor, and the computed gap is about 3/2 rounds at large n. The theorems do not rule out a solution that certifies a cost inside that gap, below Google's.
-- Find-all with k ≥ 2. The 110 cells have only the find-any floor, which is 0.063 to 67 percent of Google's leading constant.
+- Find-all with k ≥ 2. None of the 110 cells is closed. The best of the three find-all floors is 0.648 to 0.977 of Google's leading constant (computed from Google's certified values, not proved in Lean as a ratio), and Google's constants are above every floor. The relCost floors `relCost_floor_allC` and `relCost_floor_allD` are non-strict and asymptotic.
 - Small n. The statement is empty at n = 2 + log2(m k), and at the next n it gives only about 0.40 oracle rounds.
 - Other cost measures. The cost is Google's certified bound, a worst case over the initial state averaged over the marked sets. A bound averaged over initial states as well, for example, is not covered.
-- The figures computed from Google's solution files: the residual gap, the per-cell relCost values and the find-all percentages.
+- The figures computed from Google's solution files: the residual gap, the per-cell relCost values and the find-all ratios.
 
 ### How it was made and checked
 
-The proofs were written with AI coding agents and checked by Lean. The statements were reviewed by AI agents; no human expert has reviewed the statements or the proofs. The statements of `fullTargetAny`, `fullTargetAll`, `findAny_35` and `findAll_35` were reviewed twice against Google's specification, the second time by an agent that had not worked on the proofs. Both reviews found the statements faithful to the specification, with the caveats stated above: empty at the smallest n, weak for find-all at k ≥ 2, a find-all postcondition at k = 1 that differs from find-any's, and closure only to leading order. The statement `RelCostFloor11Full` was reviewed separately by an agent that had not worked on its proof and found faithful, and `RelCostFloorAny` and `RelCostFloorAll` by another agent that had not written them, with the result stated above. `checks/GroverAxioms.lean` prints the statements and the axioms of the theorems above; the expected axioms are `propext`, `Classical.choice` and `Quot.sound`.
+The proofs were written with AI coding agents and checked by Lean. The statements were reviewed by AI agents; no human expert has reviewed the statements or the proofs. The statements of `fullTargetAny`, `fullTargetAll`, `findAny_35` and `findAll_35` were reviewed twice against Google's specification, the second time by an agent that had not worked on the proofs. Both reviews found the statements faithful to the specification, with the caveats stated above: empty at the smallest n, weak for find-all at k ≥ 2, a find-all postcondition at k = 1 that differs from find-any's, and closure only to leading order. The statement `RelCostFloor11Full` was reviewed separately by an agent that had not worked on its proof and found faithful, and `RelCostFloorAny` and `RelCostFloorAll` by another agent that had not written them, with the result stated above. The three find-all floors and their relCost floors were each reviewed twice by AI agents, once by an agent that had not worked on the proofs; both reviews found them faithful to the specification, with the caveats stated in [The find-all floors](#the-find-all-floors). `checks/GroverAxioms.lean` prints the statements and the axioms of the theorems above; the expected axioms are `propext`, `Classical.choice` and `Quot.sound`.
 
-The files are copies of the project's working files in which only comments, module names, imports and namespace names changed; the export tool checked this mechanically by comparing the files with all comments removed. The working files of the proof at every cell included their own copies of the proof at cell (1, 1). The export tool checked that these copies are byte-identical to the files already published here, so they are not published twice and the new files import the existing ones. The project also has a file that applies the general theorems to each of the 242 cells (75 KB). It is left out: each instance only substitutes one cell's numbers into the general theorem and adds no statement beyond it. The library is compiled with Lean's default `autoImplicit` and `maxSynthPendingDepth` settings, under which it was developed (see `lakefile.toml`).
+The files are copies of the project's working files in which only comments, module names, imports and namespace names changed; the export tool checked this mechanically by comparing the files with all comments removed. The working files of the proof at every cell included their own copies of the proof at cell (1, 1). The export tool checked that these copies are byte-identical to the files already published here, so they are not published twice and the new files import the existing ones. For the find-all files it also checked that the files exported before are unchanged at the new source commit and that no exported file repeats the code of another. The project also has a file that applies the general theorems to each of the 242 cells (75 KB). It is left out: each instance only substitutes one cell's numbers into the general theorem and adds no statement beyond it. The library is compiled with Lean's default `autoImplicit` and `maxSynthPendingDepth` settings, under which it was developed (see `lakefile.toml`).
 
 ### Prior work
 
@@ -217,7 +283,7 @@ The run passes when it prints `Your solution is okay!`. The sandbox needs bubble
 
 These steps were tested on 2026-11-24 on a Linux x86_64 cluster node, starting from a fresh copy of this repository's files, with elan and Lean 4.35.0 installed fresh and empty Lake and Mathlib caches. `lake exe cache get` fetched every dependency from GitHub at the revisions in `lake-manifest.json` and downloaded Mathlib's prebuilt files (about 2 minutes). `lake build` built the 19 specifications (about 2 minutes) and `lake build QuantumSolutions` built the 20 solutions (about 5 minutes on 8 cores). The sandboxed Comparator then passed on five configurations, each in about 2 minutes: PreparePauliLCUAlias, Adder, TableLookup, SelectPauli and ECPointAddProjPoly. The other fifteen configurations were not rerun from this fresh copy.
 
-The lower-bound library was tested the same way in job 2021850 on a Linux x86_64 cluster node with 8 cores, from a fresh copy of this repository's files with elan, Lean 4.35.0 and the caches installed fresh. It started on 2026-11-25 (US Pacific time) and ran for 9 minutes 47 seconds. `lake exe cache get` took 158 seconds and fetched the dependencies at the revisions in `lake-manifest.json`. `lake build LowerBounds` took 291 seconds, which includes compiling the needed parts of Google's library, and built all 30 modules without errors and without `sorry` (with deprecation and linter warnings). `lake env lean checks/GroverAxioms.lean` took 30 seconds. Besides the printed definitions, which match the statements quoted above, it reported
+The lower-bound library was tested the same way in job 2022261 on a Linux x86_64 cluster node with 8 cores, from a fresh copy of this repository's Lean files, Lake configuration and checks with elan, Lean 4.35.0 and the caches installed fresh. It started on 2026-11-25 (US Pacific time) and ran for 8 minutes 41 seconds. `lake exe cache get` took 139 seconds and fetched the dependencies at the revisions in `lake-manifest.json`. `lake build LowerBounds` took 271 seconds, which includes compiling the needed parts of Google's library, and built all 55 modules without errors and without `sorry` (with deprecation and linter warnings). `lake env lean checks/GroverAxioms.lean` took 19 seconds. Besides the printed definitions, which match the statements quoted above, it reported
 
 ```
 GroverThreeFifths.findAny_lower_bound_35 : GroverLowerBound.FindAnyLowerBound (3 / 5) 16
@@ -243,6 +309,53 @@ GroverParallel.relCost_floor_any : GroverParallel.RelCostFloorAny
 'GroverParallel.relCost_floor_any' depends on axioms: [propext, Classical.choice, Quot.sound]
 GroverParallel.relCost_floor_all : GroverParallel.RelCostFloorAll
 'GroverParallel.relCost_floor_all' depends on axioms: [propext, Classical.choice, Quot.sound]
+@GroverParallel.findAll_floor_FL : ∀ {n k Q : ℕ},
+  1 ≤ k →
+    2 * k ≤ 2 ^ n →
+      ∀ (c : OracleDynamicCircuit (Operator.Unitary (2 ^ Q)) QuantumComputation.Specs.Grover.Var Q ((n + 1) * 1)),
+        GroverParallel.MeetsFindAllSpec k c →
+          ∀ (bound : ℝ),
+            QuantumComputation.Specs.AvgOracleCostBound k
+                (fun S =>
+                  ResourceCounting.CostModel.ofEmbeddedOracle
+                    (QuantumComputation.Specs.groverParallelMarkingOracle 1 S))
+                (fun S => GroverParallel.programOf c S) bound →
+              GroverParallel.FL (2 ^ n) (k - 1) ≤ bound
+'GroverParallel.findAll_floor_FL' depends on axioms: [propext, Classical.choice, Quot.sound]
+GroverParallel.relCost_floor_allB : GroverParallel.RelCostFloorAllB
+'GroverParallel.relCost_floor_allB' depends on axioms: [propext, Classical.choice, Quot.sound]
+@GroverParallel.findAll_floor_FL_m : ∀ {n m k Q : ℕ},
+  1 ≤ m →
+    1 ≤ k →
+      2 * k ≤ 2 ^ n →
+        ∀ (c : OracleDynamicCircuit (Operator.Unitary (2 ^ Q)) QuantumComputation.Specs.Grover.Var Q ((n + 1) * m)),
+          GroverParallel.MeetsFindAllSpec k c →
+            ∀ (bound : ℝ),
+              QuantumComputation.Specs.AvgOracleCostBound k
+                  (fun S =>
+                    ResourceCounting.CostModel.ofEmbeddedOracle
+                      (QuantumComputation.Specs.groverParallelMarkingOracle m S))
+                  (fun S => GroverParallel.programOf c S) bound →
+                GroverParallel.FL (2 ^ n) (k - 1) ≤ ↑m * bound
+'GroverParallel.findAll_floor_FL_m' depends on axioms: [propext, Classical.choice, Quot.sound]
+GroverParallel.relCost_floor_allC : GroverParallel.RelCostFloorAllC
+'GroverParallel.relCost_floor_allC' depends on axioms: [propext, Classical.choice, Quot.sound]
+@GroverParallel.findAll_floor_reveal : ∀ {n m k Q : ℕ},
+  1 ≤ m →
+    1 ≤ k →
+      4 * m ≤ 2 ^ n - (k - 1) →
+        ∀ (c : OracleDynamicCircuit (Operator.Unitary (2 ^ Q)) QuantumComputation.Specs.Grover.Var Q ((n + 1) * m)),
+          GroverParallel.MeetsFindAllSpec k c →
+            ∀ (bound : ℝ),
+              QuantumComputation.Specs.AvgOracleCostBound k
+                  (fun S =>
+                    ResourceCounting.CostModel.ofEmbeddedOracle
+                      (QuantumComputation.Specs.groverParallelMarkingOracle m S))
+                  (fun S => GroverParallel.programOf c S) bound →
+                (Real.pi / 8 + 1 / 4) * √(↑(2 ^ n - (k - 1)) / ↑m) - 4 / √(↑(2 ^ n - (k - 1)) / ↑m) ≤ bound
+'GroverParallel.findAll_floor_reveal' depends on axioms: [propext, Classical.choice, Quot.sound]
+GroverParallel.relCost_floor_allD : GroverParallel.RelCostFloorAllD
+'GroverParallel.relCost_floor_allD' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
 In the same job, four files outside this repository were checked. The first checked that Google's own `groverFindAny_correctness` and `groverFindAny_rel_cost` type-check as a proof of `GroverThreeFifths.SolvesFindAny` for Google's holes, so for Google's holes the restatement in that definition is the two challenge theorems as compiled from Google's specification. The second and third checked the same for `GroverParallel.SolvesFindAny` and, with Google's two find-all theorems, for `GroverParallel.SolvesFindAll`, as the examples in `ParallelRelCostStatement.lean` also do. The fourth checked that Google's `groverFindAny_correctness` and `groverFindAll_correctness` give `MeetsFindAnySpec` and `MeetsFindAllSpec` for Google's circuits in every cell of its grid (for n ≥ 1 and k ≤ 2^n), so the lower bounds apply to those circuits.
