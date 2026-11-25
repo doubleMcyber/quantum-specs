@@ -8,6 +8,8 @@ Status words:
 - **Statement**: a specification is here; no solution yet.
 - **Open**: nothing here yet.
 
+In the lower-bounds section, **Proved** means a lower bound on the cost any solution can certify is proved in Lean in this repository.
+
 The baselines are textbook constructions. Where the table says a better-known construction exists, that construction is an open target for the same frozen statement.
 
 ## 1. Arithmetic
@@ -85,7 +87,16 @@ The baselines are textbook constructions. Where the table says a better-known co
 | Discrete logarithm on an elliptic curve | Open | Point addition and lookup are the ingredients |
 | Ground-state energy by qubitization | Open | PREPARE, SELECT, the walk and phase estimation are the ingredients |
 
-## 8. Fault tolerance
+## 8. Lower bounds on cost
+
+| Statement | Status | Notes |
+|---|---|---|
+| Grover find-any, one marked item, one oracle call per round (Google's specification, cell m = k = 1) | Proved | Every certified cost is at least (3/5)·√N for N ≥ 2^16; Google's solution has (π/8 + 1/4)·√N ≈ 0.643·√N. See the README |
+| The same cell with the constant π/8 + 1/4, which would make Google's solution optimal up to lower-order terms | Open | |
+| Grover find-any at the other cells of the grid, and find-all | Open | |
+| Lower bounds on the T count of the arithmetic primitives above | Open | |
+
+## 9. Fault tolerance
 
 Nothing in this repository yet. The specifications here count logical T gates and logical qubits. Statements about error-correction gadgets, magic-state factories and compilation onto a code would connect those counts to physical hardware.
 

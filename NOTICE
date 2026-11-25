@@ -74,3 +74,14 @@ LLC) and use its step-list semantics and ripple-carry adder:
 The specifications QuantumSpecs/BlockEncoding/QubitizedWalk.lean and
 QuantumSpecs/BlockEncoding/ControlledQubitizedWalk.lean import
 QuantumComputationSpecs.Primitives.THCFactorization and reuse its definitions.
+
+Lower bounds
+------------
+LowerBounds/Grover/Statement.lean has the line "Portions Copyright 2026 Google LLC (marked
+GOOGLE-DERIVED below)" in its header. Between the markers BEGIN GOOGLE-DERIVED and END
+GOOGLE-DERIVED it restates, at m = k = 1, the program construction of groverFindAnyProgram, the
+postcondition of groverFindAny_correctness and the cost predicate of groverFindAny_rel_cost from
+QuantumComputationSpecs/Algorithms/Grover.lean (Copyright 2026 Google LLC), with the circuit and
+its qubit count quantified instead of fixed. The other files in LowerBounds/ copy no Google
+text; all but Lines.lean import Google's QuantumComputation and QuantumComputationSpecs libraries
+and use their definitions unmodified.

@@ -26,3 +26,13 @@ warn.sorry = false
 [[lean_lib]]
 name = "QuantumSolutions"
 globs = ["QuantumSolutions.+"]
+
+# Machine-checked lower bounds against Google's specifications. These files were checked under
+# Lean's default options, so this library restores the two defaults that the package options
+# above change.
+[[lean_lib]]
+name = "LowerBounds"
+globs = ["LowerBounds.+"]
+[lean_lib.leanOptions]
+autoImplicit = true
+maxSynthPendingDepth = 1
